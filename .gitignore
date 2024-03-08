@@ -1,0 +1,8 @@
+node_modules
+dist
+types
+.DS_Store
+
+.vscode/*
+!.vscode/launch.json.default
+!.vscode/extensions.json
