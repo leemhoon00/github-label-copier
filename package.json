@@ -2,11 +2,11 @@
   "name": "github-label-copier",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "types": "types/index.d.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",

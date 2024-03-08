@@ -3,12 +3,27 @@
     "target": "ESNext",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "dist",
-    "declarationDir": "types",
+    "sourceMap": true,
+    "outDir": "./lib",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
     "skipLibCheck": true
   },
-  "exclude": ["**/dist", "**/node_modules", "**/types"]
+  "include": ["src"]
 }

@@ -1,9 +1,8 @@
 import { Octokit } from '@octokit/rest';
 
-export async function getLabels(authToken: string) {
-  const octokit = new Octokit({
-    auth: authToken,
-  });
+export async function getLabels(authToken?: string) {
+  authToken;
+  const octokit = new Octokit();
 
   const labels = await octokit.issues.listLabelsForRepo({
     owner: 'leemhoon00',
