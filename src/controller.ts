@@ -25,4 +25,8 @@ export class DefaultCopier {
   }
 }
 
-export class TokenCopier extends DefaultCopier {}
+export class TokenCopier extends DefaultCopier {
+  print() {
+    console.log('TokenCopier');
+  }
+}
