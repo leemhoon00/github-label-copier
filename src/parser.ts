@@ -1,7 +1,7 @@
-import type { GithubLabel, MyLabel } from './schemas/label';
+import type { GithubLabel, Label } from './schemas/label';
 
 export class Parser {
-  parseGithubLabel(label: GithubLabel): MyLabel {
+  parseGithubLabel(label: GithubLabel): Label {
     return {
       name: label.name,
       color: label.color,
@@ -9,9 +9,18 @@ export class Parser {
     };
   }
 
-  parserGithubLabels(labels: GithubLabel[]): MyLabel[] {
+  parseGithubLabels(labels: GithubLabel[]): Label[] {
     return labels.map((label) => {
       return this.parseGithubLabel(label);
     });
+  }
+
+  parseUrl(url: string): { owner: string; repo: string } {
+    const [owner, repo] = url.split('/').slice(3);
+
+    if (!owner || !repo) {
+      throw new Error('Invalid url');
+    }
+    return { owner, repo };
   }
 }

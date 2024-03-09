@@ -8,7 +8,7 @@ export type GithubLabel = {
   description: string;
 };
 
-export type MyLabel = {
+export type Label = {
   name: string;
   color: string;
   description: string;
