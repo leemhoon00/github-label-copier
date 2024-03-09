@@ -1,27 +1,30 @@
 import type { Octokit } from '@octokit/rest';
-import type { Label } from './label';
+import type { GithubLabel } from './schemas/label';
+import { Parser } from './parser';
+
+const requestOptions = {
+  headers: {
+    'X-GitHub-Api-Version': '2022-11-28',
+  },
+};
 
 export class DefaultCopier {
-  constructor(private octokit: Octokit) {}
+  private octokit: Octokit;
+  private parser: Parser;
+
+  constructor(octokit: Octokit) {
+    this.octokit = octokit;
+    this.parser = new Parser();
+  }
 
   async getLabels(owner: string, repo: string) {
     const result = await this.octokit.request(
       `GET /repos/${owner}/${repo}/labels`,
-      {
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      }
+      requestOptions
     );
 
-    const data = result.data as Label[];
-    return data.map((label) => {
-      return {
-        name: label.name,
-        color: label.color,
-        description: label.description,
-      };
-    });
+    const data = result.data as GithubLabel[];
+    return this.parser.parserGithubLabels(data);
   }
 }
 

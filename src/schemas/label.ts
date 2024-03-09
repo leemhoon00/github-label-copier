@@ -1,4 +1,4 @@
-export interface Label {
+export type GithubLabel = {
   id: number;
   node_id: string;
   url: string;
@@ -6,4 +6,10 @@ export interface Label {
   color: string;
   default: boolean;
   description: string;
-}
+};
+
+export type MyLabel = {
+  name: string;
+  color: string;
+  description: string;
+};
