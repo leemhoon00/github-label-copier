@@ -1,15 +1,33 @@
 {
   "name": "github-label-copier",
   "version": "0.0.1",
-  "description": "",
+  "description": "simple tool to copy labels from one repository, either your own or someone else's, to your own repository.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "github",
+    "label",
+    "copy"
+  ],
+  "author": "leemhoon00",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leemhoon00/github-label-copier"
+  },
+  "bugs": {
+    "url": "https://github.com/leemhoon00/github-label-copier/issues"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "package.json",
+    "lib",
+    "src"
+  ],
   "devDependencies": {
     "@types/node": "^20.11.25",
     "typescript": "^5.4.2"
