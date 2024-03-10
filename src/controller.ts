@@ -2,6 +2,7 @@ import type { OctokitService } from './service/octokit';
 import { Label, isEqualLabel } from './domain/label';
 import { Repository } from './domain/repository';
 import fs from 'fs';
+import path from 'path';
 import YAML from 'yaml';
 
 export class DefaultCopier {
@@ -70,6 +71,44 @@ export class TokenCopier extends DefaultCopier {
 
     for await (const label of toCreateLabels) {
       this.octokitService.createLabel(toRepoInfo, label);
+    }
+  }
+
+  async pushLabels(option: { filename: string; url: string }) {
+    const repository = new Repository(option.url);
+    const repoInfo = repository.getRepoInfo();
+
+    const filePath = path.resolve(process.cwd(), option.filename);
+    let labels: string;
+    try {
+      labels = fs.readFileSync(filePath, 'utf-8');
+    } catch (e) {
+      throw new Error('File not found');
+    }
+    const format = path.extname(filePath) === '.json' ? 'json' : 'yaml';
+    const parsedLabels =
+      format === 'json' ? JSON.parse(labels) : YAML.parse(labels);
+
+    const toLabels = await this.octokitService.getLabels(repoInfo);
+
+    const toDeleteLabels = toLabels.filter((toLabel) => {
+      return !parsedLabels.some((parsedLabel: Label) => {
+        return isEqualLabel(parsedLabel, toLabel);
+      });
+    });
+
+    const toCreateLabels = parsedLabels.filter((parsedLabel: Label) => {
+      return !toLabels.some((toLabel) => {
+        return isEqualLabel(parsedLabel, toLabel);
+      });
+    });
+
+    for await (const label of toDeleteLabels) {
+      this.octokitService.deleteLabel({ ...repoInfo, label });
+    }
+
+    for await (const label of toCreateLabels) {
+      this.octokitService.createLabel(repoInfo, label);
     }
   }
 }
