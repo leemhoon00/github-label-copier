@@ -27,17 +27,21 @@ export class OctokitService {
     return parser.parseGithubLabels(result.data as GithubLabel[]);
   }
 
-  async deleteAllLabels({ owner, repo }: { owner: string; repo: string }) {
-    const labels = await this.getLabels({ owner, repo });
-
-    for (const label of labels) {
-      let name = label.name.replace(/\s/g, '%20');
-      name = name.replace(/:/g, '%3A');
-      await this.octokit.request(
-        `DELETE /repos/${owner}/${repo}/labels/${name}`,
-        octokitOption
-      );
-    }
+  async deleteLabel({
+    owner,
+    repo,
+    label,
+  }: {
+    owner: string;
+    repo: string;
+    label: Label;
+  }) {
+    let name = label.name.replace(/\s/g, '%20');
+    name = name.replace(/:/g, '%3A');
+    await this.octokit.request(
+      `DELETE /repos/${owner}/${repo}/labels/${name}`,
+      octokitOption
+    );
   }
 
   async createLabel(

@@ -1,5 +1,5 @@
 import type { OctokitService } from './service/octokit';
-import type { Label } from './domain/label';
+import { Label, isEqualLabel } from './domain/label';
 import { Repository } from './domain/repository';
 import fs from 'fs';
 import YAML from 'yaml';
@@ -50,11 +50,26 @@ export class TokenCopier extends DefaultCopier {
     const fromRepoInfo = fromRepo.getRepoInfo();
     const toRepoInfo = toRepo.getRepoInfo();
 
-    const labels = await this.octokitService.getLabels(fromRepoInfo);
-    await this.octokitService.deleteAllLabels(toRepoInfo);
+    const fromLabels = await this.octokitService.getLabels(fromRepoInfo);
+    const toLabels = await this.octokitService.getLabels(toRepoInfo);
 
-    for (const label of labels) {
-      await this.octokitService.createLabel(toRepoInfo, label);
+    const toDeleteLabels = toLabels.filter((toLabel) => {
+      return !fromLabels.some((fromLabel) => {
+        return isEqualLabel(fromLabel, toLabel);
+      });
+    });
+    const toCreateLabels = fromLabels.filter((fromLabel) => {
+      return !toLabels.some((toLabel) => {
+        return isEqualLabel(fromLabel, toLabel);
+      });
+    });
+
+    for await (const label of toDeleteLabels) {
+      this.octokitService.deleteLabel({ ...toRepoInfo, label });
+    }
+
+    for await (const label of toCreateLabels) {
+      this.octokitService.createLabel(toRepoInfo, label);
     }
   }
 }
