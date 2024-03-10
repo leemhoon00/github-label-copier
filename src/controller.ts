@@ -1,39 +1,25 @@
-import type { Octokit } from '@octokit/rest';
-import type { GithubLabel } from './schemas/label';
-import { Parser } from './parser';
-
-const octokitOptions = {
-  headers: {
-    'X-GitHub-Api-Version': '2022-11-28',
-  },
-};
+import type { OctokitService } from './service/octokit';
+import type { Label } from './domain/label';
+import { Parser } from './util/parser';
+import { Repository } from './domain/repository';
 
 export class DefaultCopier {
-  private octokit: Octokit;
+  private octokitService: OctokitService;
   private parser: Parser;
 
-  constructor(octokit: Octokit) {
-    this.octokit = octokit;
+  constructor(octokit: OctokitService) {
+    this.octokitService = octokit;
     this.parser = new Parser();
   }
 
-  async getLabels(options: { url?: string; owner?: string; repo?: string }) {
-    let { url, owner, repo } = options;
-    if (!url && (!owner || !repo)) {
-      throw new Error('Either url or owner and repo should be provided');
-    }
-    if (url) {
-      const parsedInfo = this.parser.parseUrl(url);
-      owner = parsedInfo.owner;
-      repo = parsedInfo.repo;
-    }
-    const result = await this.octokit.request(
-      `GET /repos/${owner}/${repo}/labels`,
-      octokitOptions
-    );
-
-    const data = result.data as GithubLabel[];
-    return this.parser.parseGithubLabels(data);
+  async getLabels(option: {
+    url?: string;
+    owner?: string;
+    repo?: string;
+  }): Promise<Label[]> {
+    const repository = new Repository(option);
+    const result = await this.octokitService.getLabels(repository);
+    return this.parser.parseGithubLabels(result);
   }
 }
 

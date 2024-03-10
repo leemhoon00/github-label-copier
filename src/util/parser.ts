@@ -1,4 +1,4 @@
-import type { GithubLabel, Label } from './schemas/label';
+import type { GithubLabel, Label } from '../domain/label';
 
 export class Parser {
   parseGithubLabel(label: GithubLabel): Label {
@@ -13,14 +13,5 @@ export class Parser {
     return labels.map((label) => {
       return this.parseGithubLabel(label);
     });
-  }
-
-  parseUrl(url: string): { owner: string; repo: string } {
-    const [owner, repo] = url.split('/').slice(3);
-
-    if (!owner || !repo) {
-      throw new Error('Invalid url');
-    }
-    return { owner, repo };
   }
 }
