@@ -84,3 +84,5 @@ async function main() {
 
 main();
 ```
+
+![image](https://github.com/leemhoon00/github-label-copier/assets/57895643/c439c218-231f-494d-8572-1cea5fb6ec66)
