@@ -5,7 +5,7 @@ import fs from 'fs';
 import YAML from 'yaml';
 
 export class DefaultCopier {
-  private octokitService: OctokitService;
+  protected octokitService: OctokitService;
 
   constructor(octokit: OctokitService) {
     this.octokitService = octokit;
@@ -38,4 +38,23 @@ export class DefaultCopier {
   }
 }
 
-export class TokenCopier extends DefaultCopier {}
+export class TokenCopier extends DefaultCopier {
+  constructor(octokit: OctokitService) {
+    super(octokit);
+  }
+
+  async copyLabels(option: { from: string; to: string }) {
+    const fromRepo = new Repository(option.from);
+    const toRepo = new Repository(option.to);
+
+    const fromRepoInfo = fromRepo.getRepoInfo();
+    const toRepoInfo = toRepo.getRepoInfo();
+
+    const labels = await this.octokitService.getLabels(fromRepoInfo);
+    await this.octokitService.deleteAllLabels(toRepoInfo);
+
+    for (const label of labels) {
+      await this.octokitService.createLabel(toRepoInfo, label);
+    }
+  }
+}
