@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
-import { Repository } from '../domain/repository';
-import { GithubLabel } from '../domain/label';
+import { GithubLabel, Label } from '../domain/label';
+import { Parser } from '../util/parser';
 
 const octokitOption = {
   headers: {
@@ -11,13 +11,19 @@ const octokitOption = {
 export class OctokitService {
   constructor(private octokit: Octokit) {}
 
-  async getLabels(repository: Repository): Promise<GithubLabel[]> {
-    const { owner, repo } = repository.getRepoInfo();
+  async getLabels({
+    owner,
+    repo,
+  }: {
+    owner: string;
+    repo: string;
+  }): Promise<Label[]> {
     const result = await this.octokit.request(
       `GET /repos/${owner}/${repo}/labels`,
       octokitOption
     );
 
-    return result.data as GithubLabel[];
+    const parser = new Parser();
+    return parser.parseGithubLabels(result.data as GithubLabel[]);
   }
 }

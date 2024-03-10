@@ -1,15 +1,14 @@
 import type { OctokitService } from './service/octokit';
 import type { Label } from './domain/label';
-import { Parser } from './util/parser';
 import { Repository } from './domain/repository';
+import fs from 'fs';
+import YAML from 'yaml';
 
 export class DefaultCopier {
   private octokitService: OctokitService;
-  private parser: Parser;
 
   constructor(octokit: OctokitService) {
     this.octokitService = octokit;
-    this.parser = new Parser();
   }
 
   async getLabels(option: {
@@ -18,8 +17,33 @@ export class DefaultCopier {
     repo?: string;
   }): Promise<Label[]> {
     const repository = new Repository(option);
-    const result = await this.octokitService.getLabels(repository);
-    return this.parser.parseGithubLabels(result);
+    const repoInfo = repository.getRepoInfo();
+    return await this.octokitService.getLabels(repoInfo);
+  }
+
+  async saveLabels(option: {
+    url?: string;
+    owner?: string;
+    repo?: string;
+    format?: 'json' | 'yaml';
+  }) {
+    const repository = new Repository(option);
+    const repoInfo = repository.getRepoInfo();
+    const labels = await this.octokitService.getLabels(repoInfo);
+
+    const format = option.format || 'json';
+
+    if (format === 'json') {
+      fs.writeFileSync(
+        `${repoInfo.owner}-${repoInfo.repo}-labels.json`,
+        JSON.stringify(labels, null, 2)
+      );
+    } else {
+      fs.writeFileSync(
+        `${repoInfo.owner}-${repoInfo.repo}-labels.yaml`,
+        YAML.stringify(labels)
+      );
+    }
   }
 }
 
