@@ -69,7 +69,7 @@ copier.saveLabels({
 ```javascript
 const dotenv = require('dotenv');
 dotenv.config();
-const { createCopier } = require('../github-label-copier');
+const { createCopier } = require('github-label-copier');
 
 const token = process.env.GITHUB_TOKEN;
 
