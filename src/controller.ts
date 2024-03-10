@@ -11,23 +11,14 @@ export class DefaultCopier {
     this.octokitService = octokit;
   }
 
-  async getLabels(option: {
-    url?: string;
-    owner?: string;
-    repo?: string;
-  }): Promise<Label[]> {
-    const repository = new Repository(option);
+  async getLabels(option: { url: string }): Promise<Label[]> {
+    const repository = new Repository(option.url);
     const repoInfo = repository.getRepoInfo();
     return await this.octokitService.getLabels(repoInfo);
   }
 
-  async saveLabels(option: {
-    url?: string;
-    owner?: string;
-    repo?: string;
-    format?: 'json' | 'yaml';
-  }) {
-    const repository = new Repository(option);
+  async saveLabels(option: { url: string; format?: 'json' | 'yaml' }) {
+    const repository = new Repository(option.url);
     const repoInfo = repository.getRepoInfo();
     const labels = await this.octokitService.getLabels(repoInfo);
 

@@ -2,26 +2,10 @@ export class Repository {
   url?: string;
   owner: string;
   repo: string;
-  constructor({
-    url,
-    owner,
-    repo,
-  }: {
-    url?: string;
-    owner?: string;
-    repo?: string;
-  }) {
-    if (!url && (!owner || !repo)) {
-      throw new Error('Either url or owner and repo should be provided');
-    }
-    if (url) {
-      const parsedInfo = this.parseUrl(url);
-      this.owner = parsedInfo.owner;
-      this.repo = parsedInfo.repo;
-    } else {
-      this.owner = owner!;
-      this.repo = repo!;
-    }
+  constructor(url: string) {
+    const parsedInfo = this.parseUrl(url);
+    this.owner = parsedInfo.owner;
+    this.repo = parsedInfo.repo;
   }
 
   private parseUrl(url: string): { owner: string; repo: string } {
