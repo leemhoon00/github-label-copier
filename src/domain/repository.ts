@@ -8,7 +8,7 @@ export class Repository {
     this.repo = parsedInfo.repo;
   }
 
-  private parseUrl(url: string): { owner: string; repo: string } {
+  parseUrl(url: string): { owner: string; repo: string } {
     const [owner, repo] = url.split('/').slice(3);
 
     if (!owner || !repo) {
