@@ -1,12 +1,12 @@
 {
   "name": "github-label-copier",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "simple tool to copy labels from one repository, either your own or someone else's, to your own repository.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "rm -rf lib && tsc -p tsconfig.build.json"
   },
   "keywords": [
     "github",

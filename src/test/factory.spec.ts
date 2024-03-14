@@ -1,5 +1,5 @@
-import { createCopier } from '../src/factory';
-import { DefaultCopier, TokenCopier } from '../src/controller';
+import { createCopier } from '../factory';
+import { DefaultCopier, TokenCopier } from '../controller';
 
 describe('createCopier', () => {
   it('should return an instance of DefaultCopier when no token is provided', () => {
