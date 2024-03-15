@@ -1,4 +1,4 @@
-import { Repository } from '../repository';
+import { Repository } from 'src/domain/repository';
 
 describe('Repository', () => {
   describe('constructor', () => {

@@ -1,6 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import { OctokitService } from '../octokit';
-// import { Label } from '../../domain/label';
+import { OctokitService } from 'src/service/octokit';
 
 const octokitOption = {
   headers: {

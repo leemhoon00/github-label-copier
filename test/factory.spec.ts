@@ -1,5 +1,5 @@
-import { createCopier } from '../factory';
-import { DefaultCopier, TokenCopier } from '../controller';
+import { createCopier } from 'src/factory';
+import { DefaultCopier, TokenCopier } from 'src/controller';
 
 describe('factory', () => {
   describe('createCopier', () => {

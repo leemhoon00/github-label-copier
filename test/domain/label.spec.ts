@@ -1,4 +1,4 @@
-import { isEqualLabel, Label } from '../label';
+import { isEqualLabel, Label } from 'src/domain/label';
 
 describe('label', () => {
   describe('isEqualLabel', () => {

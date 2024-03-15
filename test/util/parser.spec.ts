@@ -1,5 +1,5 @@
-import { Parser } from '../parser';
-import { GithubLabel, Label } from '../../domain/label';
+import { Parser } from 'src/util/parser';
+import { GithubLabel, Label } from 'src/domain/label';
 
 describe('Parser', () => {
   describe('parseGithubLabel', () => {
