@@ -6,7 +6,7 @@ import path from 'path';
 import YAML from 'yaml';
 
 export class DefaultCopier {
-  protected octokitService: OctokitService;
+  octokitService: OctokitService;
 
   constructor(octokit: OctokitService) {
     this.octokitService = octokit;
