@@ -13,8 +13,9 @@ npm install github-label-copier
 ### Import
 
 ```javascript
-const { createCopier } = require('github-label-copier'); // JS
-import { createCopier } from 'github-label-copier'; // TS
+const { createCopier } = require('github-label-copier');
+// or
+import { createCopier } from 'github-label-copier';
 ```
 
 ### Initialization

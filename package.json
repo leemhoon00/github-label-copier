@@ -1,6 +1,6 @@
 {
   "name": "github-label-copier",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "simple tool to copy labels from one repository, either your own or someone else's, to your own repository.",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
