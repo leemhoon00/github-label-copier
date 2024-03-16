@@ -53,6 +53,11 @@
     ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
-    }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*spec.ts"
+    ],
+    "coverageDirectory": "./coverage"
   }
 }
