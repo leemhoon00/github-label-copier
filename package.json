@@ -56,7 +56,7 @@
     },
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/*spec.ts"
+      "src/*.ts"
     ],
     "coverageDirectory": "./coverage"
   }
