@@ -23,7 +23,7 @@ export class DefaultCopier {
     const repoInfo = repository.getRepoInfo();
     const labels = await this.octokitService.getLabels(repoInfo);
 
-    const format = option.format || 'json';
+    const format = option.format ?? 'json';
 
     if (format === 'json') {
       fs.writeFileSync(
