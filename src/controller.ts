@@ -40,10 +40,6 @@ export class DefaultCopier {
 }
 
 export class TokenCopier extends DefaultCopier {
-  constructor(octokit: OctokitService) {
-    super(octokit);
-  }
-
   async copyLabels(option: { from: string; to: string }) {
     const fromRepo = new Repository(option.from);
     const toRepo = new Repository(option.to);
