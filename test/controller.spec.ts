@@ -1,8 +1,6 @@
 import { TokenCopier } from 'src/controller';
 import { OctokitService } from 'src/service/octokit';
 import YAML from 'yaml';
-
-jest.mock('fs');
 import fs from 'fs';
 
 describe('DefaultCopier', () => {
@@ -17,6 +15,13 @@ describe('DefaultCopier', () => {
   });
 
   describe('saveLabels', () => {
+    beforeEach(() => {
+      jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
     it('should save labels in json format when format is not specified', async () => {
       // given
       const getLabelsMock = jest.fn().mockResolvedValue([
@@ -182,6 +187,123 @@ describe('TokenCopier', () => {
         },
         { name: 'name2', color: '000000', description: 'description2' }
       );
+    });
+  });
+
+  describe('pushLabels', () => {
+    beforeEach(() => {
+      jest.spyOn(JSON, 'parse');
+      jest.spyOn(YAML, 'parse');
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should push labels by json file', async () => {
+      // given
+      fs.writeFileSync(
+        'labels.json',
+        JSON.stringify(
+          [
+            { name: 'name1', color: '000000', description: 'description1' },
+            { name: 'name2', color: '000000', description: 'description2' },
+          ],
+          null,
+          2
+        )
+      );
+      octokitServiceMock.getLabels.mockResolvedValue([
+        { name: 'name1', color: '000000', description: 'description1' },
+        { name: 'name2', color: '000000', description: 'description2' },
+      ]);
+
+      // when
+      await tokenCopier.pushLabels({
+        filename: 'labels.json',
+        url: 'https://github.com/leemhoon00/github-label-copier',
+      });
+
+      // then
+      expect(JSON.parse).toHaveBeenCalled();
+
+      // cleanup
+      fs.unlinkSync('labels.json');
+    });
+
+    it('should push labels by yaml file', async () => {
+      // given
+      fs.writeFileSync(
+        'labels.yaml',
+        YAML.stringify([
+          { name: 'name1', color: '000000', description: 'description1' },
+          { name: 'name2', color: '000000', description: 'description2' },
+        ])
+      );
+      octokitServiceMock.getLabels.mockResolvedValue([
+        { name: 'name1', color: '000000', description: 'description1' },
+        { name: 'name2', color: '000000', description: 'description2' },
+      ]);
+
+      // when
+      await tokenCopier.pushLabels({
+        filename: 'labels.yaml',
+        url: 'https://github.com/leemhoon00/github-label-copier',
+      });
+
+      // then
+      expect(YAML.parse).toHaveBeenCalled();
+
+      // cleanup
+      fs.unlinkSync('labels.yaml');
+    });
+
+    it('should delete 1 label and create 2 labels', async () => {
+      // given
+      fs.writeFileSync(
+        'labels.json',
+        JSON.stringify([
+          { name: 'name2', color: '000000', description: 'description2' },
+          { name: 'name3', color: '000000', description: 'description3' },
+          { name: 'name4', color: '000000', description: 'description4' },
+        ])
+      );
+      octokitServiceMock.getLabels.mockResolvedValue([
+        { name: 'name1', color: '000000', description: 'description1' },
+        { name: 'name2', color: '000000', description: 'description2' },
+      ]);
+
+      // when
+      await tokenCopier.pushLabels({
+        filename: 'labels.json',
+        url: 'https://github.com/leemhoon00/github-label-copier',
+      });
+
+      // then
+      expect(octokitServiceMock.deleteLabel).toHaveBeenCalledTimes(1);
+      expect(octokitServiceMock.deleteLabel).toHaveBeenCalledWith({
+        owner: 'leemhoon00',
+        repo: 'github-label-copier',
+        label: { name: 'name1', color: '000000', description: 'description1' },
+      });
+      expect(octokitServiceMock.createLabel).toHaveBeenCalledTimes(2);
+      expect(octokitServiceMock.createLabel).toHaveBeenCalledWith(
+        {
+          owner: 'leemhoon00',
+          repo: 'github-label-copier',
+        },
+        { name: 'name3', color: '000000', description: 'description3' }
+      );
+      expect(octokitServiceMock.createLabel).toHaveBeenCalledWith(
+        {
+          owner: 'leemhoon00',
+          repo: 'github-label-copier',
+        },
+        { name: 'name4', color: '000000', description: 'description4' }
+      );
+
+      // cleanup
+      fs.unlinkSync('labels.json');
     });
   });
 });
